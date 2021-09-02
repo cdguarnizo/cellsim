@@ -192,6 +192,8 @@ class Principal(wx.Frame):
         self.panel_page1 = wx.Panel(self.notebook_1,-1, )
         self.notebook_1_grafica = FigCanvas(self.panel_page1, -1, self.fig_datos)
         self.axes = self.fig_datos.add_subplot(111)
+        box = self.axes.get_position()
+        self.box_width = box.width
         self.chart_toolbar = NavigationToolbar2Wx(self.notebook_1_grafica)
         tw, th = self.chart_toolbar.GetSize()
         fw, fh = self.notebook_1_grafica.GetSize()
@@ -499,22 +501,21 @@ class Principal(wx.Frame):
             ParSel = 4
             bp = 1.470588235294118*bp
         
+        box = self.axes.get_position()
         self.axes.clear()
         self.axes.grid()
+        self.axes.set_position([box.x0, box.y0, self.box_width * 0.8, box.height])
         self.axes.set_ylabel("Current I [A]", fontsize=14)
         self.axes.set_xlabel("Voltage V [V]", fontsize=14)
         self.axes.set_title(self.nombrestitulos[ParSel], fontsize=14)
         
         self.axes2.clear()
+        self.axes2.set_position([box.x0, box.y0, self.box_width * 0.8, box.height])
         self.axes2.grid()
         self.axes2.set_ylabel("Power P [Watt]", fontsize=14)
         self.axes2.set_xlabel("Voltage V [V]", fontsize=14)
         self.axes2.set_title(self.nombrestitulos[ParSel], fontsize=14)
         
-        
-        box = self.axes.get_position()
-        self.axes.set_position([box.x0, box.y0, box.width * 0.7, box.height])
-        self.axes2.set_position([box.x0, box.y0, box.width * 0.7, box.height])
         for bp_i in bp:
             par[ParSel] = bp_i
             I = I_from_VT(V, par)
@@ -672,7 +673,7 @@ class Principal(wx.Frame):
     def OnAboutBox(self, event):
         descripcion = wordwrap(
             "CellSim is a software package programmed in Python using WxPython, Numpy and Matplotlib libraries.\n "
-            "It was design with the aim of plotting I-V and P-V curves for different values"
+            "It was designed with the aim of plotting I-V and P-V curves for different values"
             "for the parameters of a single diode PV (Bishop's model). \n"
             "Additionally, this software is product of the research project PCI20201"
             "from Instituto Tecnologico Metropolitano, Medellin, Antioquia.\n"
